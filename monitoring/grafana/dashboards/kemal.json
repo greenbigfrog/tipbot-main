@@ -64,7 +64,24 @@
           "refId": "A"
         }
       ],
-      "thresholds": [],
+      "thresholds": [
+        {
+          "colorMode": "critical",
+          "fill": true,
+          "line": true,
+          "op": "gt",
+          "value": 5,
+          "yaxis": "left"
+        },
+        {
+          "colorMode": "warning",
+          "fill": true,
+          "line": false,
+          "op": "gt",
+          "value": 1,
+          "yaxis": "left"
+        }
+      ],
       "timeFrom": null,
       "timeRegions": [],
       "timeShift": null,
@@ -201,6 +218,7 @@
       "dashLength": 10,
       "dashes": false,
       "datasource": "Prometheus",
+      "decimals": null,
       "description": "",
       "fill": 1,
       "fillGradient": 0,
@@ -219,6 +237,7 @@
         "hideZero": true,
         "max": false,
         "min": false,
+        "rightSide": false,
         "show": true,
         "total": false,
         "values": false
@@ -239,8 +258,9 @@
       "steppedLine": false,
       "targets": [
         {
-          "expr": "increase(http_requests_total[1m])",
-          "legendFormat": "",
+          "expr": "increase(http_requests_total[30s])",
+          "interval": "30s",
+          "legendFormat": "{{method}} {{code}} {{path}}",
           "refId": "A"
         }
       ],
@@ -264,11 +284,12 @@
       },
       "yaxes": [
         {
+          "decimals": 0,
           "format": "short",
-          "label": null,
+          "label": "",
           "logBase": 1,
           "max": null,
-          "min": null,
+          "min": "0",
           "show": true
         },
         {
@@ -277,7 +298,7 @@
           "logBase": 1,
           "max": null,
           "min": null,
-          "show": true
+          "show": false
         }
       ],
       "yaxis": {
@@ -310,6 +331,7 @@
       "hideZeroBuckets": true,
       "highlightCards": true,
       "id": 4,
+      "interval": "",
       "legend": {
         "show": true
       },
@@ -324,7 +346,7 @@
       "reverseYBuckets": false,
       "targets": [
         {
-          "expr": "sum(increase(http_request_duration_seconds_bucket[1m])) by (le, method)",
+          "expr": "sum(increase(http_request_duration_seconds_bucket[1m])) by (le)",
           "format": "heatmap",
           "hide": false,
           "instant": false,
@@ -338,7 +360,7 @@
       "title": "HTTP Response Time",
       "tooltip": {
         "show": true,
-        "showHistogram": false
+        "showHistogram": true
       },
       "type": "heatmap",
       "xAxis": {
@@ -405,7 +427,7 @@
       "valueName": "current"
     }
   ],
-  "refresh": "5s",
+  "refresh": false,
   "schemaVersion": 19,
   "style": "dark",
   "tags": [],
@@ -413,7 +435,7 @@
     "list": []
   },
   "time": {
-    "from": "now-1h",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {
@@ -433,5 +455,5 @@
   "timezone": "",
   "title": "Kemal",
   "uid": "gQg4RAOWk",
-  "version": 8
+  "version": 12
 }
