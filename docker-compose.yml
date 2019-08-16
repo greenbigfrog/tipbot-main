@@ -1,0 +1,147 @@
+version: "3"
+
+services:
+    database:
+        image: "postgres:11-alpine"
+        volumes:
+            - postgres:/var/lib/postgresql/data
+            - ./sql/schema.sql:/schema.sql
+            - ./scripts/postgres-init.sh:/docker-entrypoint-initdb.d/postgres-init.sh
+    redis:
+        image: "redis:alpine"
+    worker:
+        image: "gbf/tb-worker"
+        command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /worker'
+        depends_on:
+            - database
+        environment:
+            REDIS_URL: 'redis://redis:6379'
+            GENERAL_WEBHOOK: 'https://discordapp.com/api/webhooks/611630591594725418/UBK8S228GOnPHRKylcLlLpFPV0HJRCEGWRAIaHPKjGY6dhVDu51uzGwItkiMPbDSR1oK'
+    website:
+        image: "gbf/tb-website"
+        command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /website-entrypoint'
+        depends_on:
+            - database
+            - redis
+        environment:
+            REDIS_URL: 'redis://redis:6379'
+        ports:
+            - "80:3000"
+    discord:
+        image: "gbf/tb-discord"
+        command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /discord-entrypoint'
+        depends_on:
+            - database
+        environment:
+            REDIS_URL: 'redis://redis:6379'
+    twitch:
+        image: "gbf/tb-twitch"
+        command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /twitch'
+        depends_on:
+            - database
+        environment:
+            REDIS_URL: 'redis://redis:6379'
+    pgadmin:
+        image: "dpage/pgadmin4"
+        ports:
+            - "3030:80"
+        environment:
+            PGADMIN_DEFAULT_EMAIL: 'test@example.com'
+            PGADMIN_DEFAULT_PASSWORD: 'test'
+    dogecoind:
+        image: 'greenbigfrog/dogecoin'
+        volumes:
+            - ./dogecoin.conf:/dogecoin/.dogecoin/dogecoin.conf
+            - dogecoin:/dogecoin/
+        command: 'dogecoind -printtoconsole -testnet'
+
+        
+    prometheus:
+        image: prom/prometheus:v2.11.1
+        volumes:
+          - ./monitoring/prometheus/:/etc/prometheus/
+          - prometheus_data:/prometheus
+        command:
+          - '--config.file=/etc/prometheus/prometheus.yml'
+          - '--storage.tsdb.path=/prometheus'
+          - '--web.console.libraries=/etc/prometheus/console_libraries'
+          - '--web.console.templates=/etc/prometheus/consoles'
+          - '--storage.tsdb.retention.time=200h'
+          - '--web.enable-lifecycle'
+        restart: unless-stopped
+        expose:
+          - 9090
+    alertmanager:
+        image: prom/alertmanager:v0.18.0
+        volumes:
+          - ./alertmanager/:/etc/alertmanager/
+        command:
+          - '--config.file=/etc/alertmanager/config.yml'
+          - '--storage.path=/alertmanager'
+        restart: unless-stopped
+        expose:
+          - 9093
+    nodeexporter:
+        image: prom/node-exporter:v0.18.1
+        volumes:
+          - /proc:/host/proc:ro
+          - /sys:/host/sys:ro
+          - /:/rootfs:ro
+        command:
+          - '--path.procfs=/host/proc'
+          - '--path.rootfs=/rootfs'
+          - '--path.sysfs=/host/sys'
+          - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+        restart: unless-stopped
+        expose:
+          - 9100
+    cadvisor:
+        image: google/cadvisor:v0.33.0
+        volumes:
+          - /:/rootfs:ro
+          - /var/run:/var/run:rw
+          - /sys:/sys:ro
+          - /var/lib/docker/:/var/lib/docker:ro
+          #- /cgroup:/cgroup:ro #doesn't work on MacOS only for Linux
+        restart: unless-stopped
+        expose:
+          - 8080
+    grafana:
+        image: grafana/grafana:6.3.2
+        volumes:
+          - grafana_data:/var/lib/grafana
+          - ./monitoring/grafana/datasources:/etc/grafana/datasources
+          - ./monitoring/grafana/dashboards:/etc/grafana/dashboards
+          - ./monitoring/grafana/setup.sh:/setup.sh
+        entrypoint: /setup.sh
+        environment:
+          - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
+          - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+          - GF_USERS_ALLOW_SIGN_UP=false
+        restart: unless-stopped
+        expose:
+          - 3000
+    pushgateway:
+        image: prom/pushgateway:v0.9.1
+        restart: unless-stopped
+        expose:
+          - 9091
+    caddy:
+        image: stefanprodan/caddy
+        ports:
+          - "3000:3000"
+          - "9090:9090"
+          - "9093:9093"
+          - "9091:9091"
+        volumes:
+          - ./monitoring/caddy/:/etc/caddy/
+        environment:
+          - ADMIN_USER=${ADMIN_USER:-admin}
+          - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+        restart: unless-stopped
+
+volumes:
+    dogecoin:
+    postgres:
+    prometheus_data:
+    grafana_data:
