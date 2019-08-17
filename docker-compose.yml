@@ -25,6 +25,11 @@ services:
             - redis
         environment:
             REDIS_URL: 'redis://redis:6379'
+            SECRET: '09351270f4bf51ede5a69536aed1118ca67fdac436b8bcd1bd36bca1de852c7fc01d06af1c51fa4ccbfc111dfb025570b7d46b5d7531446dfcf74bc89218caea'
+            DISCORD_CLIENT_ID: '534117616327983106'
+            DISCORD_CLIENT_SECRET: 'o2jl1qyXDPqqrQ0MRgkUhWETAxxqh5yq'
+            TWITCH_CLIENT_ID: 'ct9qnd5r0qphqjxhtc38v527sz9c32'
+            TWITCH_CLIENT_SECRET: 'onznuk5ocssxf6xxprvwyfwf6glr6o'
         ports:
             - "80:3000"
     discord:
@@ -34,6 +39,8 @@ services:
             - database
         environment:
             REDIS_URL: 'redis://redis:6379'
+        ports:
+            - "5000:5000"
     twitch:
         image: "gbf/tb-twitch"
         command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /twitch'
@@ -74,7 +81,7 @@ services:
     alertmanager:
         image: prom/alertmanager:v0.18.0
         volumes:
-          - ./alertmanager/:/etc/alertmanager/
+          - ./monitoring/alertmanager/:/etc/alertmanager/
         command:
           - '--config.file=/etc/alertmanager/config.yml'
           - '--storage.path=/alertmanager'
@@ -121,11 +128,6 @@ services:
         restart: unless-stopped
         expose:
           - 3000
-    pushgateway:
-        image: prom/pushgateway:v0.9.1
-        restart: unless-stopped
-        expose:
-          - 9091
     caddy:
         image: stefanprodan/caddy
         ports:
