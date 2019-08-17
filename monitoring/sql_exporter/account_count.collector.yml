@@ -1,0 +1,9 @@
+collector_name: account_count
+
+metrics:
+  - metric_name: sql_account_count
+    type: gauge
+    help: 'Total count of accounts in system'
+    values: [account_count]
+    query: |
+      SELECT count(id) AS account_count FROM accounts

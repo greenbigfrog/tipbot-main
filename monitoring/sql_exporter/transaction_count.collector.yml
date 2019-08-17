@@ -1,0 +1,9 @@
+collector_name: transaction_count
+
+metrics:
+  - metric_name: sql_transaction_count
+    type: gauge
+    help: 'Total count of transactions in system'
+    values: [transaction_count]
+    query: |
+      SELECT count(id) AS transaction_count FROM transactions

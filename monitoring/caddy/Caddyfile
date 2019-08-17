@@ -18,9 +18,19 @@
     tls off
 }
 
-:9091 {
+:9121 {
     basicauth / {$ADMIN_USER} {$ADMIN_PASSWORD}
-    proxy / pushgateway:9091 {
+    proxy / redis_exporter:9121 {
+            transparent
+        }
+
+    errors stderr
+    tls off
+}
+
+:9399 {
+    basicauth / {$ADMIN_USER} {$ADMIN_PASSWORD}
+    proxy / sql_exporter:9399 {
             transparent
         }
 

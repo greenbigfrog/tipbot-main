@@ -97,6 +97,25 @@ services:
         restart: unless-stopped
         expose:
           - 9100
+    redis_exporter:
+        image: oliver006/redis_exporter
+        depends_on:
+          - redis
+        command:
+          - '--redis.addr=redis://redis:6379'
+        restart: unless-stopped
+        expose:
+          - 9121
+    sql_exporter:
+        image: githubfree/sql_exporter
+        depends_on:
+          - database
+        volumes:
+          - ./monitoring/sql_exporter:/sql_exporter
+        command:
+          - '-config.file=/sql_exporter/sql_exporter.yml'
+        expose:
+          - 9399
     cadvisor:
         image: google/cadvisor:v0.33.0
         volumes:
@@ -129,6 +148,8 @@ services:
           - "3000:3000"
           - "9090:9090"
           - "9093:9093"
+          - "9121:9121"
+          - "9399:9399"
         volumes:
           - ./monitoring/caddy/:/etc/caddy/
         environment:
