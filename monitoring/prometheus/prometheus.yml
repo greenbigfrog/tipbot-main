@@ -39,6 +39,12 @@ scrape_configs:
     static_configs:
       - targets: ['website:3000']
 
+  - job_name: 'discord'
+    scrape_interval: 10s
+    honor_labels: true
+    static_configs:
+      - targets: ['discord:5000']
+
 
 alerting:
   alertmanagers:

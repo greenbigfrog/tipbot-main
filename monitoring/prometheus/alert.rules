@@ -68,3 +68,14 @@ groups:
       summary: "Jenkins high memory usage"
       description: "Jenkins memory consumption is at {{ humanize $value}}."
 
+
+- name: discord
+  rules:
+  - alert: no_recent_event
+    expr: ((sum (discord_events_total) without (event)) - (sum (discord_events_total offset 5m) without (event))) == 0
+    for: 10s
+    labels:
+      severity: critical
+    annotations:
+      summary: "Discord WS down"
+      description: "Haven't received a WS event in 10s"
