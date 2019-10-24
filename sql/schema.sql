@@ -53,6 +53,8 @@ CREATE TABLE coins (
 
        high_balance numeric(64, 8) NOT NULL,
 
+       balance_broadcast text,
+
        created_time timestamptz NOT NULL DEFAULT now()
 );
 
@@ -142,11 +144,11 @@ CREATE TABLE withdrawals (
        id serial PRIMARY KEY,
        pending boolean DEFAULT true,
        coin int NOT NULL REFERENCES coins,
-       user_id int NOT NULL REFERENCES accounts(id),
+       account_id int NOT NULL REFERENCES accounts(id),
        address text NOT NULL,
        amount numeric(64, 8) CONSTRAINT positive_amount CHECK (amount > 0),
 
-       transaction bigint NOT NULL REFERENCES transactions,
+       transaction int NOT NULL REFERENCES transactions,
 
        created_time timestamptz NOT NULL DEFAULT now()
 );
