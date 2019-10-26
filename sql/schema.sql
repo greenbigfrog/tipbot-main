@@ -84,8 +84,9 @@ CREATE TABLE configs (
 
     prefix text,
 
-    soak boolean NOT NULL DEFAULT false,
-    rain boolean NOT NULL DEFAULT false,
+    mention boolean,
+    soak boolean,
+    rain boolean,
 
     min_soak numeric(64, 8),
     min_soak_total numeric(64, 8),
@@ -105,8 +106,6 @@ CREATE TABLE guilds (
     guild_id bigint NOT NULL,    
     coin int NOT NULL REFERENCES coins,
     UNIQUE(guild_id, coin),
-    
-    mention boolean NOT NULL DEFAULT false,
 
     created_time timestamptz NOT NULL DEFAULT now()
 );
