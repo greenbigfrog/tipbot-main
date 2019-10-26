@@ -10,7 +10,7 @@ services:
     redis:
         image: "redis:alpine"
     worker:
-        image: "gbf/tb-worker"
+        image: "greenbigfrog/tb-worker"
         command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /worker'
         depends_on:
             - database
@@ -18,7 +18,7 @@ services:
             REDIS_URL: 'redis://redis:6379'
             GENERAL_WEBHOOK: 'https://discordapp.com/api/webhooks/611630591594725418/UBK8S228GOnPHRKylcLlLpFPV0HJRCEGWRAIaHPKjGY6dhVDu51uzGwItkiMPbDSR1oK'
     website:
-        image: "gbf/tb-website"
+        image: "greenbigfrog/tb-website"
         command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /website-entrypoint'
         depends_on:
             - database
@@ -28,7 +28,7 @@ services:
         ports:
             - "80:3000"
     discord:
-        image: "gbf/tb-discord"
+        image: "greenbigfrog/tb-discord"
         command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /discord-entrypoint'
         depends_on:
             - database
@@ -37,19 +37,12 @@ services:
         ports:
             - "5000:5000"
     twitch:
-        image: "gbf/tb-twitch"
+        image: "greenbigfrog/tb-twitch"
         command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /twitch'
         depends_on:
             - database
         environment:
             REDIS_URL: 'redis://redis:6379'
-    pgadmin:
-        image: "dpage/pgadmin4"
-        ports:
-            - "3030:80"
-        environment:
-            PGADMIN_DEFAULT_EMAIL: 'test@example.com'
-            PGADMIN_DEFAULT_PASSWORD: 'test'
     dogecoind:
         image: 'greenbigfrog/dogecoin'
         volumes:
@@ -68,7 +61,7 @@ services:
           - '--storage.tsdb.path=/prometheus'
           - '--web.console.libraries=/etc/prometheus/console_libraries'
           - '--web.console.templates=/etc/prometheus/consoles'
-          - '--storage.tsdb.retention.time=200h'
+          - '--storage.tsdb.retention.time=48h'
           - '--web.enable-lifecycle'
         restart: unless-stopped
         expose:
