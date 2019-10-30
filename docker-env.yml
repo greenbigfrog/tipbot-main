@@ -1,0 +1,20 @@
+version: "3"
+
+services:
+  worker:
+    enviroment:
+      GENERAL_WEBHOOK: 'https://discordapp.com/api/webhooks/637589957632/ze1ycTahfhahfhsafa4yA'
+  website:
+    enviroment:
+      SECRET: '09351270f4aea'
+      DISCORD_CLIENT_ID: '5341183106'
+      DISCORD_CLIENT_SECRET: 'To06MudIRKOks'
+      TWITCH_CLIENT_ID: 'ct9qz9c32'
+      TWITCH_CLIENT_SECRET: 'ptb3ttvcyqbc'
+      SENTRY_DSN: 'https://3fc714080@sentry.io/179'
+  discord:
+    enviroment:
+      SENTRY_DSN: 'https://54a87@sentry.io/179'
+  twitch:
+    enviroment:
+      SENTRY_DSN: 'https://7f0f3329@sentry.io/17'
