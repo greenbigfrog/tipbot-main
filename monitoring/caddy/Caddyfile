@@ -18,26 +18,6 @@
     tls off
 }
 
-:9121 {
-    basicauth / {$ADMIN_USER} {$ADMIN_PASSWORD}
-    proxy / redis_exporter:9121 {
-            transparent
-        }
-
-    errors stderr
-    tls off
-}
-
-:9399 {
-    basicauth / {$ADMIN_USER} {$ADMIN_PASSWORD}
-    proxy / sql_exporter:9399 {
-            transparent
-        }
-
-    errors stderr
-    tls off
-}
-
 :3000 {
     proxy / grafana:3000 {
             transparent
