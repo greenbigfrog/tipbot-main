@@ -16,7 +16,6 @@ services:
             - database
         environment:
             REDIS_URL: 'redis://redis:6379'
-            GENERAL_WEBHOOK: 'https://discordapp.com/api/webhooks/611630591594725418/UBK8S228GOnPHRKylcLlLpFPV0HJRCEGWRAIaHPKjGY6dhVDu51uzGwItkiMPbDSR1oK'
     website:
         image: "greenbigfrog/tb-website"
         command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /website-entrypoint'
@@ -24,6 +23,7 @@ services:
             - database
             - redis
         environment:
+            HOST: "http://127.0.0.1:3000"
             REDIS_URL: 'redis://redis:6379'
         ports:
             - "80:3000"
@@ -152,6 +152,10 @@ services:
 
 volumes:
     dogecoin:
+      external: true
     postgres:
+      external: true
     prometheus_data:
+      external: true
     grafana_data:
+      external: true
