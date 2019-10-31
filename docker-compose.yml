@@ -25,8 +25,8 @@ services:
         environment:
             HOST: "http://127.0.0.1:3000"
             REDIS_URL: 'redis://redis:6379'
-        ports:
-            - "80:3000"
+        expose:
+            - "3000"
     discord:
         image: "greenbigfrog/tb-discord"
         command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /discord-entrypoint'
@@ -34,8 +34,8 @@ services:
             - database
         environment:
             REDIS_URL: 'redis://redis:6379'
-        ports:
-            - "5000:5000"
+        expose:
+            - "5000"
     twitch:
         image: "greenbigfrog/tb-twitch"
         command: bash -c 'while !</dev/tcp/database/5432; do echo "waiting for database"; sleep 1; done; /twitch'
@@ -143,6 +143,8 @@ services:
           - "9093:9093"
           - "9121:9121"
           - "9399:9399"
+          - "80:80"
+          - "443:443"
         volumes:
           - ./monitoring/caddy/:/etc/caddy/
         environment:
