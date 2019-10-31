@@ -155,10 +155,11 @@ CREATE TABLE withdrawals (
 CREATE MATERIALIZED VIEW statistics AS (
        SELECT
               (SELECT SUM(1) FROM transactions) AS transaction_count,
-              (SELECT SUM(amount) FROM transactions) AS transaction_sum,
-              (SELECT SUM(amount) FROM transactions WHERE memo='TIP') AS tip_sum,
-              (SELECT SUM(amount) FROM transactions WHERE memo='SOAK') AS soak_sum,
-              (SELECT SUM(amount) FROM transactions WHERE memo='RAIN') as rain_sum
+              (SELECT SUM(ABS(amount)) / 2 FROM transactions) AS transaction_sum,
+              (SELECT SUM(ABS(amount) / 2) FROM transactions WHERE memo='TIP') AS tip_sum,
+              (SELECT SUM(ABS(amount) / 2) FROM transactions WHERE memo='SOAK') AS soak_sum,
+              (SELECT SUM(ABS(amount) / 2) FROM transactions WHERE memo='RAIN') as rain_sum,
+              now() as last_refresh
 );
 
 
