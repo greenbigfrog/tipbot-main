@@ -17,8 +17,6 @@ CREATE TABLE coins (
        discord_client_id text,
 
        twitch_chat_password text,
-       twitch_oauth_id text,
-       twitch_oauth_token text,
 
        prefix text NOT NULL,
 
