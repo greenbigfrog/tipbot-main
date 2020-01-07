@@ -5,6 +5,8 @@ CREATE TABLE accounts (
        twitch_id bigint UNIQUE,
        discord_id bigint UNIQUE,
 
+       streamlabs_token text,
+
        created_time timestamptz NOT NULL DEFAULT now()
 );
 
