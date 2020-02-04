@@ -2,19 +2,31 @@ version: "3"
 
 services:
   worker:
-    enviroment:
-      GENERAL_WEBHOOK: 'https://discordapp.com/api/webhooks/637589957632/ze1ycTahfhahfhsafa4yA'
+    environment:
+      # Discord webhook for sending events like new guild to
+      GENERAL_WEBHOOK: 'https://discordapp.com/api/webhooks/637589956310597632/ze1ycTTTjbxURxFCsI4yA'
   website:
-    enviroment:
-      SECRET: '09351270f4aea'
-      DISCORD_CLIENT_ID: '5341183106'
-      DISCORD_CLIENT_SECRET: 'To06MudIRKOks'
-      TWITCH_CLIENT_ID: 'ct9qz9c32'
-      TWITCH_CLIENT_SECRET: 'ptb3ttvcyqbc'
-      SENTRY_DSN: 'https://3fc714080@sentry.io/179'
+    environment:
+      # Secret for storing sessions
+      SECRET: '09351270f4bf51ede5bfc111dfb025570b7d46b5d7531446dfcf74bc89218caea'
+      # Discord OAuth
+      DISCORD_CLIENT_ID: '53411761106'
+      DISCORD_CLIENT_SECRET: 'To06RKOks'
+      # Twitch OAuth
+      TWITCH_CLIENT_ID: 'ct9qnd5z9c32'
+      TWITCH_CLIENT_SECRET: 'ptb3tvcyqbc'
+      # Streamlabs OAuth
+      SL_CLIENT_ID: 'wvjRj557YaKWB0iRY'
+      SL_CLIENT_SECRET: 'DzswEzCOC0LOELWyvt'
+      # Redirect domain for OAuth flow
+      HOST: 'https://cryptobutler.info'
+      # Kemal enviroment
+      KEMAL_ENV: 'production'
+
+      SENTRY_DSN: 'https://3fc714624@sentry.io/1795413'
   discord:
-    enviroment:
-      SENTRY_DSN: 'https://54a87@sentry.io/179'
+    environment:
+      SENTRY_DSN: 'https://546369a87@sentry.io/1795395'
   twitch:
-    enviroment:
-      SENTRY_DSN: 'https://7f0f3329@sentry.io/17'
+    environment:
+      SENTRY_DSN: 'https://7f0fe2328@sentry.io/1795405'

@@ -23,7 +23,6 @@ services:
             - database
             - redis
         environment:
-            HOST: "http://127.0.0.1:3000"
             REDIS_URL: 'redis://redis:6379'
         expose:
             - "3000"
@@ -129,9 +128,9 @@ services:
           - ./monitoring/grafana/setup.sh:/setup.sh
         entrypoint: /setup.sh
         environment:
-          - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
-          - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
-          - GF_USERS_ALLOW_SIGN_UP=false
+          GF_SECURITY_ADMIN_USER: '${ADMIN_USER}'
+          GF_SECURITY_ADMIN_PASSWORD: '${ADMIN_PASSWORD}'
+          GF_USERS_ALLOW_SIGN_UP: 'false'
         restart: unless-stopped
         expose:
           - 3000
@@ -145,11 +144,11 @@ services:
           - "9399:9399"
           - "80:80"
           - "443:443"
+        environment:
+          ADMIN_USER: '${ADMIN_USER}'
+          ADMIN_PASSWORD: '${ADMIN_PASSWORD}'
         volumes:
           - ./monitoring/caddy/:/etc/caddy/
-        environment:
-          - ADMIN_USER=${ADMIN_USER:-admin}
-          - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
         restart: unless-stopped
 
 volumes:
