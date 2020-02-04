@@ -35,5 +35,7 @@ grafana.cryptobutler.info:80, grafana.cryptobutler.info:443, :3000 {
 		transparent
 	}
 
+	tls /etc/ssl/cf-origin.pem /etc/ssl/cf-origin.priv.pem
+
 	log stdout
 }
