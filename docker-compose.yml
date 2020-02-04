@@ -4,7 +4,7 @@ services:
     database:
         image: "postgres:11-alpine"
         volumes:
-            - postgres:/var/lib/postgresql/data
+            - butler_postgres:/var/lib/postgresql/data
             - ./sql/schema.sql:/schema.sql
             - ./scripts/postgres-init.sh:/docker-entrypoint-initdb.d/postgres-init.sh
     redis:
@@ -46,7 +46,7 @@ services:
         image: 'greenbigfrog/dogecoin'
         volumes:
             - ./dogecoin.conf:/dogecoin/.dogecoin/dogecoin.conf
-            - dogecoin:/dogecoin/
+            - butler_dogecoin:/dogecoin/
         command: 'dogecoind -printtoconsole -testnet'
 
         
@@ -54,7 +54,7 @@ services:
         image: prom/prometheus:v2.11.1
         volumes:
           - ./monitoring/prometheus/:/etc/prometheus/
-          - prometheus_data:/prometheus
+          - butler_prometheus_data:/prometheus
         command:
           - '--config.file=/etc/prometheus/prometheus.yml'
           - '--storage.tsdb.path=/prometheus'
@@ -122,7 +122,7 @@ services:
     grafana:
         image: grafana/grafana:6.3.2
         volumes:
-          - grafana_data:/var/lib/grafana
+          - butler_grafana_data:/var/lib/grafana
           - ./monitoring/grafana/datasources:/etc/grafana/datasources
           - ./monitoring/grafana/dashboards:/etc/grafana/dashboards
           - ./monitoring/grafana/setup.sh:/setup.sh
@@ -152,11 +152,11 @@ services:
         restart: unless-stopped
 
 volumes:
-    dogecoin:
+    butler_dogecoin:
       external: true
-    postgres:
+    butler_postgres:
       external: true
-    prometheus_data:
+    butler_prometheus_data:
       external: true
-    grafana_data:
+    butler_grafana_data:
       external: true
