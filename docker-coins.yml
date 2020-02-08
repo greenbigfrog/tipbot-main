@@ -1,0 +1,13 @@
+version: "3"
+
+services:
+  dogecoind:
+    image: 'greenbigfrog/dogecoin'
+    volumes:
+      - ./dogecoin.conf:/dogecoin/.dogecoin/dogecoin.conf
+      - butler_dogecoin:/dogecoin/
+    command: 'dogecoind -printtoconsole -testnet'
+
+volumes:
+  butler_dogecoin:
+    external: true

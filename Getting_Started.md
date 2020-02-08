@@ -11,15 +11,16 @@
 
 # Actual starting
 1. Clone this repo
-2. Edit/add the coin configs you plan on using (eg `dogecoin.conf`) and set up coins in `docker-compose.yml` (service and volume)
+2. Edit/add the coin configs you plan on using (eg `dogecoin.conf`) and set up coins in `docker-coins.yml` (service and volume)
 3. Edit `docker-env.yml` (Check comments in file for instructions)
 4. Edit `.env` to set grafana and http auth password
-5. Create docker volumes for all coins (eg `docker volume create dogecoin`)
-6. Create docker volumes for postgres and monitoring (`docker volume create postgres && docker volume create prometheus_data && docker volume create grafana_data`)
-7. Launch coin wallets: `docker-compose -f docker-compose.yml -f docker-env.yml up -d dogecoind database redis`
-8. Launch monitoring stack: `docker-compose -f docker-compose.yml -f docker-env.yml up -d prometheus alertmanager nodeexporter redis_exporter sql_exporter cadvisor grafana caddy`
-9. Insert coins into database (generate SQL using script: `crystal run generate_coin_sql.cr`)
-10. Launch website, discord, twitch, worker: `docker-compose -f docker-compose.yml -f docker-env.yml up -d website discord twitch worker`
+5. Create docker volumes for all coins (eg `docker volume create butler_dogecoin`)
+6. Create docker volumes for postgres and monitoring (`docker volume create butler_postgres && docker volume create butler_prometheus_data && docker volume create butler_grafana_data`)
+7. Launch coin wallets: `docker-compose -f docker-coins.yml up -d`
+8. Start databases: `docker-compose -f docker-compose.yml -f docker-env.yml up -d database redis`
+9. Launch monitoring stack: `docker-compose -f docker-compose.yml -f docker-env.yml up -d prometheus alertmanager nodeexporter redis_exporter sql_exporter cadvisor grafana caddy`
+10. Insert coins into database (generate SQL using script: `crystal run generate_coin_sql.cr`)
+11. Launch website, discord, twitch, worker: `docker-compose -f docker-compose.yml -f docker-env.yml up -d website discord twitch worker`
 
 
 ### Commands
