@@ -1,0 +1,1 @@
+ALTER TYPE transaction_memo ADD VALUE 'IMPORT';
